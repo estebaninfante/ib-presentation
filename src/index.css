@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
 
 :root {
-  --bg-color: #ffffff;
-  --text-color: #000000;
+  --bg-color: #000b1e; /* Deep Navy Blue */
+  --text-color: #ffffff;
   --accent-color: #0075eb; /* Revolut Blue */
-  --secondary-color: #8e8e93;
+  --secondary-color: #aeb9cc;
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
@@ -34,7 +34,7 @@ body {
   width: 100%;
   height: 100%;
   position: relative;
-  background: white;
+  background: var(--bg-color);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -68,7 +68,7 @@ body {
 }
 
 .control-btn {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.1);
   border: none;
   width: 3rem;
   height: 3rem;
@@ -81,7 +81,7 @@ body {
 }
 
 .control-btn:hover {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .progress-bar {
@@ -181,7 +181,8 @@ body {
 .icon-box {
   width: 64px;
   height: 64px;
-  background: #f2f2f7;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   display: flex;
   justify-content: center;

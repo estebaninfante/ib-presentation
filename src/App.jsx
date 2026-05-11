@@ -118,14 +118,14 @@ export default function App() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 80 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              style={{ width: 2, background: '#000', margin: '0 1rem' }}
+              style={{ width: 2, background: 'rgba(255, 255, 255, 0.2)', margin: '0 1rem' }}
             />
             <motion.div 
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="subtitle"
-              style={{ color: '#000', fontWeight: 400 }}
+              style={{ color: 'white', fontWeight: 400 }}
             >
               Research Project
             </motion.div>
@@ -137,7 +137,7 @@ export default function App() {
             transition={{ delay: 0.8, duration: 0.8 }}
             style={{ textAlign: 'center' }}
           >
-            <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#8e8e93', marginBottom: '1rem' }}>
+            <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--secondary-color)', marginBottom: '1rem' }}>
               Presented by
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem 3rem', fontSize: '0.8rem', fontWeight: 500 }}>
@@ -172,7 +172,7 @@ export default function App() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 + i * 0.1 }}
-                style={{ padding: '0.8rem 1.2rem', background: '#f2f2f7', borderRadius: '12px', fontWeight: 600, fontSize: '0.9rem' }}
+                style={{ padding: '0.8rem 1.2rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '12px', fontWeight: 600, fontSize: '0.9rem' }}
               >
                 {c}
               </motion.div>
@@ -190,10 +190,10 @@ export default function App() {
           
           <div style={{ display: 'flex', gap: '4rem', marginBottom: '3rem', justifyContent: 'center' }}>
             <div>
-              <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: '#8e8e93', marginBottom: '1rem' }}>General Variables</div>
+              <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--secondary-color)', marginBottom: '1rem' }}>General Variables</div>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 {['GDP', 'Inflation', 'Economic Freedom'].map(v => (
-                  <span key={v} style={{ fontSize: '0.8rem', fontWeight: 700, padding: '0.5rem 1rem', background: '#f2f2f7', borderRadius: '8px' }}>{v}</span>
+                  <span key={v} style={{ fontSize: '0.8rem', fontWeight: 700, padding: '0.5rem 1rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px' }}>{v}</span>
                 ))}
               </div>
             </div>
@@ -201,7 +201,7 @@ export default function App() {
               <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: '#0075eb', marginBottom: '1rem' }}>Specific Variables</div>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 {['Internet Penetration', 'Financial Account Ownership'].map(v => (
-                  <span key={v} style={{ fontSize: '0.8rem', fontWeight: 700, padding: '0.5rem 1rem', background: '#eef7ff', color: '#0075eb', borderRadius: '8px' }}>{v}</span>
+                  <span key={v} style={{ fontSize: '0.8rem', fontWeight: 700, padding: '0.5rem 1rem', background: 'rgba(0, 117, 235, 0.1)', border: '1px solid rgba(0, 117, 235, 0.2)', color: '#0075eb', borderRadius: '8px' }}>{v}</span>
                 ))}
               </div>
             </div>
@@ -215,7 +215,7 @@ export default function App() {
                 animate={{ 
                   height: isFiltered && (item.id === 'eg' || item.id === 'tr') ? [null, null, 0] : `${item.val * 10}px`,
                   opacity: isFiltered && (item.id === 'eg' || item.id === 'tr') ? [1, 1, 0] : 1,
-                  backgroundColor: isFiltered && (item.id === 'eg' || item.id === 'tr') ? ['#000', '#ff3b30', '#ff3b30'] : (item.active ? '#0075eb' : '#000'),
+                  backgroundColor: isFiltered && (item.id === 'eg' || item.id === 'tr') ? ['rgba(255, 255, 255, 0.1)', '#ff3b30', '#ff3b30'] : (item.active ? '#0075eb' : 'rgba(255, 255, 255, 0.2)'),
                   width: isFiltered && (item.id === 'eg' || item.id === 'tr') ? [100, 100, 0] : 100,
                   margin: isFiltered && (item.id === 'eg' || item.id === 'tr') ? [null, null, 0] : '0 1rem'
                 }}
@@ -249,7 +249,7 @@ export default function App() {
             ))}
           </div>
 
-          <div style={{ fontSize: '0.65rem', color: '#8e8e93', position: 'absolute', bottom: '-8rem', width: '100%', lineHeight: 1.4, textAlign: 'center' }}>
+          <div style={{ fontSize: '0.65rem', color: 'var(--secondary-color)', position: 'absolute', bottom: '-8rem', width: '100%', lineHeight: 1.4, textAlign: 'center' }}>
             <strong>Los datos se obtuvieron de las siguientes fuentes:</strong><br/>
             International Telecommunication Union. (2024). Measuring digital development: Facts and figures 2024. ITU Telecommunication Development Bureau. https://www.itu.int/itu-d/reports/statistics/facts-figures-2024/<br/>
             World Bank. (2025a). The global findex database 2025. World Bank Group. https://www.worldbank.org<br/>
@@ -284,7 +284,7 @@ export default function App() {
           <div className="label">Key Findings</div>
           <h2 className="title" style={{ fontSize: '2.5rem', marginBottom: '3rem' }}>The Finalist Countries</h2>
           <div className="grid-container" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
-            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="grid-item" style={{ padding: '2rem', background: '#f2f2f7', borderRadius: '24px' }}>
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="grid-item" style={{ padding: '2rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '24px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
                 <div className="icon-box" style={{ width: '48px', height: '48px' }}><Landmark size={24} /></div>
                 <div style={{ fontWeight: 800, fontSize: '1.2rem' }}>Canada</div>
@@ -292,7 +292,7 @@ export default function App() {
               <p style={{ fontSize: '0.95rem', lineHeight: 1.6, opacity: 0.8 }}>Strong institutional stability, but a <strong>highly saturated</strong> banking sector dominated by major incumbents.</p>
             </motion.div>
             
-            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="grid-item" style={{ padding: '2rem', background: '#f2f2f7', borderRadius: '24px' }}>
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="grid-item" style={{ padding: '2rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '24px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
                 <div className="icon-box" style={{ width: '48px', height: '48px' }}><WifiOff size={24} /></div>
                 <div style={{ fontWeight: 800, fontSize: '1.2rem' }}>Panama</div>
@@ -329,11 +329,11 @@ export default function App() {
             />
           </div>
           <div style={{ flex: 0.8, display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.5 }} style={{ background: '#f2f2f7', padding: '1.5rem', borderRadius: '20px', borderLeft: '4px solid #0075eb' }}>
+            <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.5 }} style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '1.5rem', borderRadius: '20px', borderLeft: '4px solid #0075eb' }}>
               <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '0.5rem' }}>Fintech Sandbox</div>
               <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Entering through Malaysia's regulatory sandbox to reduce operational risk before scaling.</p>
             </motion.div>
-            <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.7 }} style={{ background: '#f2f2f7', padding: '1.5rem', borderRadius: '20px', borderLeft: '4px solid #0075eb' }}>
+            <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.7 }} style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '1.5rem', borderRadius: '20px', borderLeft: '4px solid #0075eb' }}>
               <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '0.5rem' }}>Local Adaptation</div>
               <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Facilitating adaptation to local regulations and payment infrastructure seamlessly.</p>
             </motion.div>
@@ -349,17 +349,17 @@ export default function App() {
           <h2 className="title">Scaling Trust</h2>
           <p className="subtitle" style={{ fontSize: '1rem', marginBottom: '3rem' }}>Local adaptation is a key factor for successful expansion.</p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
-            <motion.div whileHover={{ y: -5 }} style={{ background: '#000', color: 'white', padding: '2rem', borderRadius: '24px', textAlign: 'left' }}>
+            <motion.div whileHover={{ y: -5 }} style={{ background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.1)', color: 'white', padding: '2rem', borderRadius: '24px', textAlign: 'left' }}>
               <CreditCard size={32} style={{ marginBottom: '1rem', color: '#0075eb' }} />
               <div style={{ fontWeight: 800, fontSize: '1.1rem' }}>Shariah Compliance</div>
               <p style={{ opacity: 0.6, fontSize: '0.85rem', marginTop: '1rem' }}>Financial products adapted to Malaysia's Islamic finance environment.</p>
             </motion.div>
-            <motion.div whileHover={{ y: -5 }} style={{ background: '#f2f2f7', padding: '2rem', borderRadius: '24px', textAlign: 'left' }}>
+            <motion.div whileHover={{ y: -5 }} style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '2rem', borderRadius: '24px', textAlign: 'left' }}>
               <ArrowRight size={32} style={{ marginBottom: '1rem', color: '#0075eb' }} />
               <div style={{ fontWeight: 800, fontSize: '1.1rem' }}>DuitNow Integration</div>
               <p style={{ opacity: 0.6, fontSize: '0.85rem', marginTop: '1rem' }}>Seamless connection with local payment infrastructure.</p>
             </motion.div>
-            <motion.div whileHover={{ y: -5 }} style={{ background: '#f2f2f7', padding: '2rem', borderRadius: '24px', textAlign: 'left' }}>
+            <motion.div whileHover={{ y: -5 }} style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '2rem', borderRadius: '24px', textAlign: 'left' }}>
               <TrendingUp size={32} style={{ marginBottom: '1rem', color: '#0075eb' }} />
               <div style={{ fontWeight: 800, fontSize: '1.1rem' }}>Digital-First</div>
               <p style={{ opacity: 0.6, fontSize: '0.85rem', marginTop: '1rem' }}>TikTok campaigns, influencer marketing, and referral systems.</p>
@@ -376,15 +376,15 @@ export default function App() {
           <h2 className="title" style={{ fontSize: '2.5rem' }}>Beyond Economic Size</h2>
           <p className="subtitle" style={{ marginBottom: '3rem', fontSize: '1rem' }}>"International expansion depends on much more than economic size alone."</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} style={{ background: '#f2f2f7', padding: '1.5rem', borderRadius: '20px' }}>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '1.5rem', borderRadius: '20px' }}>
               <div style={{ fontWeight: 800, color: '#0075eb', marginBottom: '0.5rem' }}>Strategic Influence</div>
               <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>Digital readiness, regulation, and culture directly influence success.</p>
             </motion.div>
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} style={{ background: '#f2f2f7', padding: '1.5rem', borderRadius: '20px' }}>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '1.5rem', borderRadius: '20px' }}>
               <div style={{ fontWeight: 800, color: '#0075eb', marginBottom: '0.5rem' }}>Balanced Analysis</div>
               <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>Combining quantitative and qualitative data for stronger decisions.</p>
             </motion.div>
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} style={{ gridColumn: 'span 2', background: '#000', color: 'white', padding: '1.5rem', borderRadius: '20px', textAlign: 'center' }}>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} style={{ gridColumn: 'span 2', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.1)', color: 'white', padding: '1.5rem', borderRadius: '20px', textAlign: 'center' }}>
               <p style={{ fontWeight: 600 }}>Understanding the complexity behind global expansion in fintech.</p>
             </motion.div>
           </div>
@@ -422,7 +422,7 @@ export default function App() {
       <div className="progress-bar" style={{ width: `${((currentScene + 1) / scenes.length) * 100}%` }} />
       
       {/* Timer Overlay */}
-      <div style={{ position: 'fixed', top: '2rem', right: '2rem', fontSize: '0.75rem', fontWeight: 600, color: '#8e8e93', zIndex: 200 }}>
+      <div style={{ position: 'fixed', top: '2rem', right: '2rem', fontSize: '0.75rem', fontWeight: 600, color: 'var(--secondary-color)', zIndex: 200 }}>
         {formatTime(time)}
       </div>
 
