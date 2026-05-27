@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Globe, 
-  BarChart3, 
-  Search, 
-  ShieldCheck, 
-  CreditCard, 
-  Target, 
-  ChevronRight, 
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import {
+  Globe,
+  BarChart3,
+  Search,
+  ShieldCheck,
+  CreditCard,
+  Target,
+  ChevronRight,
   ChevronLeft,
   Users,
   Smartphone,
@@ -26,6 +26,117 @@ const data = [
   { id: 'tr', name: 'Türkiye', val: 15, active: false, gdp: '$11,789', infl: '43.31%', ef: '58.02', internet: '83.16%', account: '83.26%' },
 ];
 
+const CreditCard3D = () => {
+  return (
+    <div className="card-perspective">
+      <motion.div
+        initial={{ rotateY: 0, y: 0 }}
+        animate={{ 
+          rotateY: 360,
+          y: [0, -20, 0]
+        }}
+        transition={{
+          rotateY: { duration: 10, repeat: Infinity, ease: "linear" },
+          y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+        }}
+        className="card-3d"
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div className="card-chip" />
+        </div>
+        <div className="card-number" style={{ fontSize: '1rem', marginTop: '2rem' }}>**** **** **** 2026</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: 'auto' }}>
+          <div className="card-holder">Card Holder</div>
+          <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>RESEARCH TEAM</div>
+          <div style={{ display: 'flex', gap: '0.2rem', marginTop: '0.5rem' }}>
+            <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(255,255,255,0.4)' }} />
+            <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', marginLeft: '-12px' }} />
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
+const InteractiveBackground = () => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  const blob1X = useTransform(mouseX, [0, window.innerWidth], [-100, 100]);
+  const blob1Y = useTransform(mouseY, [0, window.innerHeight], [-100, 100]);
+  
+  const blob2X = useTransform(mouseX, [0, window.innerWidth], [50, -50]);
+  const blob2Y = useTransform(mouseY, [0, window.innerHeight], [50, -50]);
+
+  return (
+    <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, overflow: 'hidden', background: '#000b1e' }}>
+      {/* Background Mesh/Grid */}
+      <div style={{ 
+        position: 'absolute', 
+        width: '100%', 
+        height: '100%', 
+        backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px)', 
+        backgroundSize: '40px 40px',
+        opacity: 0.5 
+      }} />
+
+      {/* Animated Blobs */}
+      <motion.div 
+        style={{ 
+          position: 'absolute', 
+          width: '600px', 
+          height: '600px', 
+          borderRadius: '50%', 
+          background: 'radial-gradient(circle, rgba(0, 117, 235, 0.15) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+          x: blob1X,
+          y: blob1Y,
+          top: '10%',
+          left: '10%',
+        }}
+      />
+      <motion.div 
+        style={{ 
+          position: 'absolute', 
+          width: '500px', 
+          height: '500px', 
+          borderRadius: '50%', 
+          background: 'radial-gradient(circle, rgba(176, 38, 255, 0.1) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+          x: blob2X,
+          y: blob2Y,
+          bottom: '10%',
+          right: '10%',
+        }}
+      />
+      
+      {/* Dynamic Mouse Spotlight */}
+      <motion.div
+        style={{
+          position: 'absolute',
+          width: '1000px',
+          height: '1000px',
+          borderRadius: '50%',
+          background: useTransform(
+            [mouseX, mouseY],
+            ([x, y]) => `radial-gradient(600px circle at ${x}px ${y}px, rgba(0, 117, 235, 0.05), transparent 80%)`
+          ),
+          pointerEvents: 'none',
+        }}
+      />
+    </div>
+  );
+};
+
 export default function App() {
   const [currentScene, setCurrentScene] = useState(0);
   const [isFiltered, setIsFiltered] = useState(false);
@@ -34,7 +145,7 @@ export default function App() {
 
   const next = () => {
     if (!isActive) setIsActive(true); // Start timer on first move
-    
+
     if (scenes[currentScene].id === 'juan-filtering' && !isFiltered) {
       setIsFiltered(true);
     } else {
@@ -104,51 +215,8 @@ export default function App() {
     {
       id: 'cover',
       content: (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3rem' }}>
-          <div className="logo-container">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="revolut-logo"
-            >
-              Revolut
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 80 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              style={{ width: 2, background: 'rgba(255, 255, 255, 0.2)', margin: '0 1rem' }}
-            />
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="subtitle"
-              style={{ color: 'white', fontWeight: 400 }}
-            >
-              Research Project
-            </motion.div>
-          </div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-            style={{ textAlign: 'center' }}
-          >
-            <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--secondary-color)', marginBottom: '1rem' }}>
-              Presented by
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem 3rem', fontSize: '0.8rem', fontWeight: 500 }}>
-              <span>Carlos Eduardo Sanchez Bechara</span>
-              <span>Juan Esteban Infante Martínez</span>
-              <span>Samuel Esteban Fonseca Dávila</span>
-              <span>Manuela De Los Ángeles Páez Sánchez</span>
-              <span>Nicoll Dayana Bernal Pulido</span>
-              <span>Juan José García Poveda</span>
-            </div>
-          </motion.div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <CreditCard3D />
         </div>
       )
     },
@@ -167,7 +235,7 @@ export default function App() {
           </motion.p>
           <div style={{ display: 'flex', gap: '1.5rem', marginTop: '3.5rem', justifyContent: 'center' }}>
             {['Canada', 'Egypt', 'Panama', 'Türkiye', 'Malaysia'].map((c, i) => (
-              <motion.div 
+              <motion.div
                 key={c}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -187,7 +255,7 @@ export default function App() {
         <div style={{ width: '100%', maxWidth: '1000px', textAlign: 'center', position: 'relative' }}>
           <div className="label">Quantitative Analysis</div>
           <h2 className="title" style={{ fontSize: '2.5rem', marginBottom: '1.5rem' }}>The Filtering Process</h2>
-          
+
           <div style={{ display: 'flex', gap: '4rem', marginBottom: '3rem', justifyContent: 'center' }}>
             <div>
               <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--secondary-color)', marginBottom: '1rem' }}>General Variables</div>
@@ -209,19 +277,19 @@ export default function App() {
 
           <div className="bar-chart" style={{ height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '2rem', position: 'relative', marginBottom: '4rem' }}>
             {data.map((item, i) => (
-              <motion.div 
+              <motion.div
                 key={item.id}
                 initial={{ height: 0, opacity: 0 }}
-                animate={{ 
+                animate={{
                   height: isFiltered && (item.id === 'eg' || item.id === 'tr') ? [null, null, 0] : `${item.val * 10}px`,
                   opacity: isFiltered && (item.id === 'eg' || item.id === 'tr') ? [1, 1, 0] : 1,
                   backgroundColor: isFiltered && (item.id === 'eg' || item.id === 'tr') ? ['rgba(255, 255, 255, 0.1)', '#ff3b30', '#ff3b30'] : (item.active ? '#0075eb' : 'rgba(255, 255, 255, 0.2)'),
                   width: isFiltered && (item.id === 'eg' || item.id === 'tr') ? [100, 100, 0] : 100,
                   margin: isFiltered && (item.id === 'eg' || item.id === 'tr') ? [null, null, 0] : '0 1rem'
                 }}
-                transition={{ 
-                  duration: isFiltered && (item.id === 'eg' || item.id === 'tr') ? 3.5 : 1, 
-                  times: [0, 0.6, 1], 
+                transition={{
+                  duration: isFiltered && (item.id === 'eg' || item.id === 'tr') ? 3.5 : 1,
+                  times: [0, 0.6, 1],
                   delay: isFiltered ? (item.id === 'eg' || item.id === 'tr' ? 0 : 0.4) : i * 0.1,
                   ease: "easeInOut"
                 }}
@@ -291,7 +359,7 @@ export default function App() {
               </div>
               <p style={{ fontSize: '0.95rem', lineHeight: 1.6, opacity: 0.8 }}>Strong institutional stability, but a <strong>highly saturated</strong> banking sector dominated by major incumbents.</p>
             </motion.div>
-            
+
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="grid-item" style={{ padding: '2rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '24px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
                 <div className="icon-box" style={{ width: '48px', height: '48px' }}><WifiOff size={24} /></div>
@@ -321,7 +389,7 @@ export default function App() {
             <p className="subtitle" style={{ fontSize: '1.1rem', marginTop: '1.5rem', lineHeight: 1.6 }}>
               The research concluded that a <strong>greenfield investment</strong> allows Revolut to maintain full control over its technology, operations, and organizational culture.
             </p>
-            <motion.div 
+            <motion.div
               initial={{ width: 0 }}
               animate={{ width: '100%' }}
               transition={{ duration: 1.5 }}
@@ -394,7 +462,7 @@ export default function App() {
     {
       id: 'closing',
       content: (
-        <motion.div 
+        <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1 }}
@@ -419,8 +487,10 @@ export default function App() {
 
   return (
     <div className="presentation-container" onClick={handleGlobalClick} style={{ cursor: 'pointer' }}>
+      <InteractiveBackground />
+
       <div className="progress-bar" style={{ width: `${((currentScene + 1) / scenes.length) * 100}%` }} />
-      
+
       {/* Timer Overlay */}
       <div style={{ position: 'fixed', top: '2rem', right: '2rem', fontSize: '0.75rem', fontWeight: 600, color: 'var(--secondary-color)', zIndex: 200 }}>
         {formatTime(time)}
@@ -429,10 +499,10 @@ export default function App() {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentScene}
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          exit={{ opacity: 0, x: -1000 }}
+          transition={{ duration: 0.5}}
           className="scene-wrapper"
         >
           {scenes[currentScene].content}
