@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {
   Globe,
   BarChart3,
@@ -27,35 +29,92 @@ const data = [
 ];
 
 const CreditCard3D = () => {
-  return (
-    <div className="card-perspective">
-      <motion.div
-        initial={{ rotateY: 0, y: 0 }}
-        animate={{ 
-          rotateY: 360,
-          y: [0, -20, 0]
-        }}
-        transition={{
-          rotateY: { duration: 10, repeat: Infinity, ease: "linear" },
-          y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
-        }}
-        className="card-3d"
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <div className="card-chip" />
-        </div>
-        <div className="card-number" style={{ fontSize: '1rem', marginTop: '2rem' }}>**** **** **** 2026</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: 'auto' }}>
-          <div className="card-holder">Card Holder</div>
-          <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>RESEARCH TEAM</div>
-          <div style={{ display: 'flex', gap: '0.2rem', marginTop: '0.5rem' }}>
-            <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(255,255,255,0.4)' }} />
-            <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', marginLeft: '-12px' }} />
-          </div>
-        </div>
-      </motion.div>
-    </div>
-  );
+  const container = useRef(null);
+
+  useEffect(() => {
+    if (!container.current) return;
+
+    // Three.js setup
+    const scene = new THREE.Scene();
+    const cardSize = Math.min(window.innerWidth, window.innerHeight) * 0.8;
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    
+    camera.position.z = 2.5;
+    renderer.setSize(cardSize, cardSize);
+    renderer.setClearColor(0x000000, 0);
+    renderer.domElement.style.borderRadius = '12px';
+    container.current.appendChild(renderer.domElement);
+
+    // Luces
+    const light1 = new THREE.DirectionalLight(0xffffff, 1.5);
+    light1.position.set(5, 5, 5);
+    scene.add(light1);
+
+    const light2 = new THREE.DirectionalLight(0x0075eb, 1);
+    light2.position.set(-5, -5, 5);
+    scene.add(light2);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+
+    // Cargar modelo
+    let model = null;
+    const loader = new GLTFLoader();
+    loader.load('/isafe-tarjeta.glb', (gltf) => {
+      model = gltf.scene;
+      
+      // Centrar y escalar
+      const box = new THREE.Box3().setFromObject(model);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      
+      model.position.sub(center);
+      const scale = 1.5 / Math.max(size.x, size.y, size.z);
+      model.scale.multiplyScalar(scale);
+      
+      // Rotar para que esté de pie
+      model.rotation.z = Math.PI / 2;
+      
+      scene.add(model);
+    });
+
+    // Animación
+    let rotY = 0;
+    let animationFrameId = null;
+    const animate = () => {
+      animationFrameId = requestAnimationFrame(animate);
+      
+      if (model) {
+        rotY += 0.01;
+        model.rotation.y = rotY;
+        model.position.y = Math.sin(rotY * 0.5) * 0.3;
+      }
+      
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    // Resize
+    const handleResize = () => {
+      const newCardSize = Math.min(window.innerWidth, window.innerHeight) * 0.8;
+      renderer.setSize(newCardSize, newCardSize);
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      if (container.current && renderer.domElement.parentNode === container.current) {
+        container.current.removeChild(renderer.domElement);
+      }
+      renderer.dispose();
+    };
+  }, []);
+
+  return <div ref={container} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }} />;
 };
 
 const InteractiveBackground = () => {
@@ -215,7 +274,8 @@ export default function App() {
     {
       id: 'cover',
       content: (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '2rem' }}>
+          <h1 style={{ fontSize: '4rem', fontWeight: 800, color: '#FF0000' }}>I-Safe</h1>
           <CreditCard3D />
         </div>
       )
