@@ -433,3 +433,6 @@ body {
     gap: 0.5rem;
   }
 }
+
+.hook-bg { position: absolute; inset: 0; background-image: url('./assets/emergency-alone.jpeg'); background-size: cover; background-position: center; z-index: -1; filter: brightness(0.3) saturate(1.2); }
+.text-red-highlight { color: var(--primary); text-shadow: 0 0 20px rgba(192, 57, 43, 0.6); font-weight: 700; }
