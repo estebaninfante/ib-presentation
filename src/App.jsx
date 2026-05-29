@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Smartphone, Lock, Radio, Sun, Compass, ArrowRight, Shield, AlertTriangle, 
-  MapPin, DollarSign, Award, ChevronRight, ZoomIn, ZoomOut, ChevronLeft
+  MapPin, DollarSign, Award, ChevronRight, ZoomIn, ZoomOut, ChevronLeft, Eye, EyeOff, Maximize, Minimize
 } from 'lucide-react';
 
 /* CountUp Component for stats animation */
@@ -58,7 +58,26 @@ export default function App() {
   const [time, setTime] = useState(600); // 10 minutes (600 seconds)
   const [isFadingOut, setIsFadingOut] = useState(false);
 
+  const [showControls, setShowControls] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const totalSlides = 12;
+
+  // Track browser fullscreen state changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  };
 
   // Slide navigation
   const next = () => {
@@ -123,10 +142,12 @@ export default function App() {
   }, [activeSlide]);
 
   const [scale, setScale] = useState(1);
+  const [isManualScale, setIsManualScale] = useState(false);
 
   // Auto-scaling logic to fit 16:9 viewport inside the screen
   useEffect(() => {
     const handleResize = () => {
+      if (isManualScale) return;
       const targetRatio = 16 / 9;
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
@@ -146,7 +167,7 @@ export default function App() {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isManualScale]);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -1095,139 +1116,211 @@ export default function App() {
       </div>
     </div>
 
-      {/* Floating Control Toolbar */}
-      <div
-        className="interactive floating-toolbar"
-        style={{
-          position: 'fixed',
-          bottom: '24px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          alignItems: 'center',
-          gap: '12px',
-          background: 'rgba(13, 13, 13, 0.85)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          border: '1px solid rgba(57, 255, 20, 0.2)',
-          borderRadius: '40px',
-          padding: '8px 16px',
-          zIndex: 9999,
-          boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
-        }}
-      >
-        {/* Navigation Buttons */}
-        <button
-          onClick={prev}
-          disabled={activeSlide === 0}
+      {/* Floating Control Toolbar (Hidden in fullscreen mode) */}
+      {!isFullscreen && (
+        <div
+          className="interactive"
           style={{
-            background: 'none',
-            border: 'none',
-            color: activeSlide === 0 ? '#444' : '#FFF',
-            cursor: activeSlide === 0 ? 'not-allowed' : 'pointer',
-            padding: '8px',
+            position: 'fixed',
+            bottom: '24px',
+            right: showControls ? 'auto' : '16px',
+            left: showControls ? '50%' : 'auto',
+            transform: showControls ? 'translateX(-50%)' : 'none',
             display: 'flex',
             alignItems: 'center',
-            transition: 'color 0.2s'
+            gap: showControls ? '12px' : '0px',
+            background: showControls ? 'rgba(13, 13, 13, 0.85)' : 'rgba(13, 13, 13, 0.3)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: showControls ? '1px solid rgba(57, 255, 20, 0.2)' : '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '40px',
+            padding: showControls ? '8px 16px' : '6px',
+            zIndex: 9999,
+            boxShadow: showControls ? '0 10px 30px rgba(0,0,0,0.5)' : 'none',
+            transition: 'all 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
+            opacity: showControls ? 1 : 0.4
           }}
-          title="Diapositiva Anterior"
         >
-          <ChevronLeft size={20} />
-        </button>
+          {showControls ? (
+            <>
+              {/* Navigation Buttons */}
+              <button
+                onClick={prev}
+                disabled={activeSlide === 0}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: activeSlide === 0 ? '#444' : '#FFF',
+                  cursor: activeSlide === 0 ? 'not-allowed' : 'pointer',
+                  padding: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  transition: 'color 0.2s'
+                }}
+                title="Diapositiva Anterior"
+              >
+                <ChevronLeft size={20} />
+              </button>
 
-        <span style={{
-          fontFamily: 'var(--font-space)',
-          fontSize: '0.9rem',
-          color: '#FFF',
-          minWidth: '50px',
-          textAlign: 'center',
-          userSelect: 'none'
-        }}>
-          {activeSlide + 1} / {totalSlides}
-        </span>
+              <span style={{
+                fontFamily: 'var(--font-space)',
+                fontSize: '0.9rem',
+                color: '#FFF',
+                minWidth: '50px',
+                textAlign: 'center',
+                userSelect: 'none'
+              }}>
+                {activeSlide + 1} / {totalSlides}
+              </span>
 
-        <button
-          onClick={next}
-          disabled={activeSlide === totalSlides - 1}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: activeSlide === totalSlides - 1 ? '#444' : '#FFF',
-            cursor: activeSlide === totalSlides - 1 ? 'not-allowed' : 'pointer',
-            padding: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            transition: 'color 0.2s'
-          }}
-          title="Diapositiva Siguiente"
-        >
-          <ChevronRight size={20} />
-        </button>
+              <button
+                onClick={next}
+                disabled={activeSlide === totalSlides - 1}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: activeSlide === totalSlides - 1 ? '#444' : '#FFF',
+                  cursor: activeSlide === totalSlides - 1 ? 'not-allowed' : 'pointer',
+                  padding: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  transition: 'color 0.2s'
+                }}
+                title="Diapositiva Siguiente"
+              >
+                <ChevronRight size={20} />
+              </button>
 
-        {/* Separator */}
-        <div style={{ width: '1px', height: '20px', backgroundColor: 'rgba(255,255,255,0.15)' }} />
+              {/* Separator */}
+              <div style={{ width: '1px', height: '20px', backgroundColor: 'rgba(255,255,255,0.15)' }} />
 
-        {/* Zoom Buttons */}
-        <button
-          onClick={() => setScale(prev => Math.max(0.2, prev - 0.1))}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: '#FFF',
-            cursor: 'pointer',
-            padding: '8px',
-            display: 'flex',
-            alignItems: 'center'
-          }}
-          title="Alejar (Zoom Out)"
-        >
-          <ZoomOut size={18} />
-        </button>
+              {/* Zoom Buttons */}
+              <button
+                onClick={() => {
+                  setScale(prev => Math.max(0.2, prev - 0.1));
+                  setIsManualScale(true);
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#FFF',
+                  cursor: 'pointer',
+                  padding: '8px',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+                title="Alejar (Zoom Out)"
+              >
+                <ZoomOut size={18} />
+              </button>
 
-        <button
-          onClick={() => {
-            // Auto fit calculation
-            const targetRatio = 16 / 9;
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
-            const windowRatio = windowWidth / windowHeight;
-            if (windowRatio > targetRatio) {
-              setScale(windowHeight / 1080);
-            } else {
-              setScale(windowWidth / 1920);
-            }
-          }}
-          style={{
-            background: 'rgba(57, 255, 20, 0.1)',
-            border: '1px solid rgba(57, 255, 20, 0.3)',
-            borderRadius: '12px',
-            color: 'var(--primary)',
-            fontFamily: 'var(--font-space)',
-            fontSize: '0.75rem',
-            padding: '4px 8px',
-            cursor: 'pointer',
-            fontWeight: 700
-          }}
-          title="Ajustar Pantalla (Auto)"
-        >
-          {Math.round(scale * 100)}%
-        </button>
+              <button
+                onClick={() => {
+                  setIsManualScale(false);
+                  const targetRatio = 16 / 9;
+                  const windowWidth = window.innerWidth;
+                  const windowHeight = window.innerHeight;
+                  const windowRatio = windowWidth / windowHeight;
+                  if (windowRatio > targetRatio) {
+                    setScale(windowHeight / 1080);
+                  } else {
+                    setScale(windowWidth / 1920);
+                  }
+                }}
+                style={{
+                  background: 'rgba(57, 255, 20, 0.1)',
+                  border: '1px solid rgba(57, 255, 20, 0.3)',
+                  borderRadius: '12px',
+                  color: 'var(--primary)',
+                  fontFamily: 'var(--font-space)',
+                  fontSize: '0.75rem',
+                  padding: '4px 8px',
+                  cursor: 'pointer',
+                  fontWeight: 700
+                }}
+                title="Ajustar Pantalla (Auto)"
+              >
+                {Math.round(scale * 100)}%
+              </button>
 
-        <button
-          onClick={() => setScale(prev => Math.min(2.5, prev + 0.1))}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: '#FFF',
-            cursor: 'pointer',
-            padding: '8px',
-            display: 'flex',
-            alignItems: 'center'
-          }}
-          title="Acercar (Zoom In)"
-        >
-          <ZoomIn size={18} />
-        </button>
-      </div>
+              <button
+                onClick={() => {
+                  setScale(prev => Math.min(2.5, prev + 0.1));
+                  setIsManualScale(true);
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#FFF',
+                  cursor: 'pointer',
+                  padding: '8px',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+                title="Acercar (Zoom In)"
+              >
+                <ZoomIn size={18} />
+              </button>
+
+              {/* Separator */}
+              <div style={{ width: '1px', height: '20px', backgroundColor: 'rgba(255,255,255,0.15)' }} />
+
+              {/* Fullscreen Button */}
+              <button
+                onClick={toggleFullscreen}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#FFF',
+                  cursor: 'pointer',
+                  padding: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  transition: 'color 0.2s'
+                }}
+                title="Pantalla Completa"
+              >
+                <Maximize size={18} />
+              </button>
+
+              {/* Minimal Collapse Button (Flechita a la derecha) */}
+              <button
+                onClick={() => setShowControls(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'rgba(255,255,255,0.4)',
+                  cursor: 'pointer',
+                  padding: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  transition: 'color 0.2s'
+                }}
+                title="Ocultar Barra"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </>
+          ) : (
+            // Minimalist arrow left toggle to restore toolbar
+            <button
+              onClick={() => setShowControls(true)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'rgba(255,255,255,0.6)',
+                cursor: 'pointer',
+                padding: '4px',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+              title="Mostrar Controles"
+            >
+              <ChevronLeft size={16} />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
