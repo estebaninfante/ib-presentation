@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Smartphone, Lock, Radio, Sun, Compass, ArrowRight, Shield, AlertTriangle, 
-  MapPin, DollarSign, Award, ChevronRight
+  MapPin, DollarSign, Award, ChevronRight, ZoomIn, ZoomOut, ChevronLeft
 } from 'lucide-react';
 
 /* CountUp Component for stats animation */
@@ -81,13 +81,15 @@ export default function App() {
     }
   };
 
-  // Click on screen halves to navigate
+  // Click on screen halves to navigate (respecting scaled canvas coordinates)
   const handleContainerClick = (e) => {
     if (e.target.closest('.interactive') || e.target.closest('a') || e.target.closest('button')) {
       return;
     }
-    const width = window.innerWidth;
-    const clickX = e.clientX;
+    const container = e.currentTarget;
+    const rect = container.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const width = rect.width;
     if (clickX > width / 2) {
       next();
     } else {
@@ -119,6 +121,32 @@ export default function App() {
     }, 1000);
     return () => clearInterval(timer);
   }, [activeSlide]);
+
+  const [scale, setScale] = useState(1);
+
+  // Auto-scaling logic to fit 16:9 viewport inside the screen
+  useEffect(() => {
+    const handleResize = () => {
+      const targetRatio = 16 / 9;
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const windowRatio = windowWidth / windowHeight;
+
+      let newScale = 1;
+      if (windowRatio > targetRatio) {
+        // Window is wider than 16:9
+        newScale = windowHeight / 1080;
+      } else {
+        // Window is narrower than 16:9
+        newScale = windowWidth / 1920;
+      }
+      setScale(newScale);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -153,17 +181,42 @@ export default function App() {
 
   return (
     <div
-      className="presentation-container"
-      onClick={handleContainerClick}
-      style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', position: 'relative' }}
+      className="presentation-wrapper"
+      style={{
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: '#000000',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        position: 'relative'
+      }}
     >
-      {/* Global Background Particles */}
-      {renderParticles()}
+      {/* 16:9 Viewport Canvas */}
+      <div
+        className="presentation-container"
+        onClick={handleContainerClick}
+        style={{
+          width: '1920px',
+          height: '1080px',
+          position: 'absolute',
+          transform: `scale(${scale})`,
+          transformOrigin: 'center center',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+          userSelect: 'none'
+        }}
+      >
+        {/* Global Background Particles */}
+        {renderParticles()}
 
-      {/* 10-Minute Countdown Timer */}
-      <div className={`countdown-timer ${time === 0 ? 'pulse-red' : ''}`}>
-        {formatTime(time)}
-      </div>
+        {/* 10-Minute Countdown Timer */}
+        <div className={`countdown-timer ${time === 0 ? 'pulse-red' : ''}`}>
+          {formatTime(time)}
+        </div>
 
       {/* --- SLIDE 1: PORTADA --- */}
       <div className={`section section-0 ${activeSlide === 0 ? 'active' : ''} ${isFadingOut ? 'fading-out' : ''}`}>
@@ -1039,6 +1092,142 @@ export default function App() {
             <p>Johan Alvarez · Tomas Valbuena · Juan Esteban Infante · Daniel Rodríguez · Manuela Canales</p>
           </div>
         </div>
+      </div>
+    </div>
+
+      {/* Floating Control Toolbar */}
+      <div
+        className="interactive"
+        style={{
+          position: 'fixed',
+          bottom: '24px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          background: 'rgba(13, 13, 13, 0.85)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(57, 255, 20, 0.2)',
+          borderRadius: '40px',
+          padding: '8px 16px',
+          zIndex: 9999,
+          boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+        }}
+      >
+        {/* Navigation Buttons */}
+        <button
+          onClick={prev}
+          disabled={activeSlide === 0}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: activeSlide === 0 ? '#444' : '#FFF',
+            cursor: activeSlide === 0 ? 'not-allowed' : 'pointer',
+            padding: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            transition: 'color 0.2s'
+          }}
+          title="Diapositiva Anterior"
+        >
+          <ChevronLeft size={20} />
+        </button>
+
+        <span style={{
+          fontFamily: 'var(--font-space)',
+          fontSize: '0.9rem',
+          color: '#FFF',
+          minWidth: '50px',
+          textAlign: 'center',
+          userSelect: 'none'
+        }}>
+          {activeSlide + 1} / {totalSlides}
+        </span>
+
+        <button
+          onClick={next}
+          disabled={activeSlide === totalSlides - 1}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: activeSlide === totalSlides - 1 ? '#444' : '#FFF',
+            cursor: activeSlide === totalSlides - 1 ? 'not-allowed' : 'pointer',
+            padding: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            transition: 'color 0.2s'
+          }}
+          title="Diapositiva Siguiente"
+        >
+          <ChevronRight size={20} />
+        </button>
+
+        {/* Separator */}
+        <div style={{ width: '1px', height: '20px', backgroundColor: 'rgba(255,255,255,0.15)' }} />
+
+        {/* Zoom Buttons */}
+        <button
+          onClick={() => setScale(prev => Math.max(0.2, prev - 0.1))}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#FFF',
+            cursor: 'pointer',
+            padding: '8px',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+          title="Alejar (Zoom Out)"
+        >
+          <ZoomOut size={18} />
+        </button>
+
+        <button
+          onClick={() => {
+            // Auto fit calculation
+            const targetRatio = 16 / 9;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const windowRatio = windowWidth / windowHeight;
+            if (windowRatio > targetRatio) {
+              setScale(windowHeight / 1080);
+            } else {
+              setScale(windowWidth / 1920);
+            }
+          }}
+          style={{
+            background: 'rgba(57, 255, 20, 0.1)',
+            border: '1px solid rgba(57, 255, 20, 0.3)',
+            borderRadius: '12px',
+            color: 'var(--primary)',
+            fontFamily: 'var(--font-space)',
+            fontSize: '0.75rem',
+            padding: '4px 8px',
+            cursor: 'pointer',
+            fontWeight: 700
+          }}
+          title="Ajustar Pantalla (Auto)"
+        >
+          {Math.round(scale * 100)}%
+        </button>
+
+        <button
+          onClick={() => setScale(prev => Math.min(2.5, prev + 0.1))}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#FFF',
+            cursor: 'pointer',
+            padding: '8px',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+          title="Acercar (Zoom In)"
+        >
+          <ZoomIn size={18} />
+        </button>
       </div>
     </div>
   );
