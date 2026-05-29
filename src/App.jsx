@@ -712,7 +712,7 @@ export default function App() {
             position: 'relative'
           }}>
             <img 
-              src="/src/assets/mockup-app.png" 
+              src="/mockup-app.png" 
               alt="Mockup Interfaz Móvil" 
               onError={(e) => {
                 e.target.style.display = 'none';
@@ -736,7 +736,7 @@ export default function App() {
               padding: '2rem'
             }}>
               <Smartphone size={60} color="rgba(255,255,255,0.2)" style={{ marginBottom: '1rem' }} />
-              <p style={{ fontSize: '1rem', color: '#E0E0E0' }}>[ Coloque su archivo mockup-app.png en src/assets/ ]</p>
+              <p style={{ fontSize: '1rem', color: '#E0E0E0' }}>[ Coloque su archivo mockup-app.png en la carpeta public/ ]</p>
               <p style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>Inicio de sesión · Mapa de estaciones · Reserva · Monitoreo · Alertas</p>
             </div>
           </div>
@@ -760,7 +760,7 @@ export default function App() {
             position: 'relative'
           }}>
             <img 
-              src="/src/assets/estacion-fisica.png" 
+              src="/estacion-fisica.png" 
               alt="Mockup Estación Inteligente" 
               onError={(e) => {
                 e.target.style.display = 'none';
@@ -783,7 +783,7 @@ export default function App() {
               padding: '2rem'
             }}>
               <Compass size={60} color="rgba(255,255,255,0.2)" style={{ marginBottom: '1rem' }} />
-              <p style={{ fontSize: '1rem', color: '#E0E0E0' }}>[ Coloque su archivo estacion-fisica.png en src/assets/ ]</p>
+              <p style={{ fontSize: '1rem', color: '#E0E0E0' }}>[ Coloque su archivo estacion-fisica.png en la carpeta public/ ]</p>
               <p style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>Imagen conceptual de la estación física urbana de SmartBike</p>
             </div>
           </div>
