@@ -1097,13 +1097,12 @@ export default function App() {
 
       {/* Floating Control Toolbar */}
       <div
-        className="interactive"
+        className="interactive floating-toolbar"
         style={{
           position: 'fixed',
           bottom: '24px',
           left: '50%',
           transform: 'translateX(-50%)',
-          display: 'flex',
           alignItems: 'center',
           gap: '12px',
           background: 'rgba(13, 13, 13, 0.85)',
