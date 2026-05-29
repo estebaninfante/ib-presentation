@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap');
 
 :root {
-  --primary: #C0392B;
-  --primary-light: #E74C3C;
-  --bg: #F8F7F5;
+  --primary: #39FF14;
+  --primary-light: #2ECC71;
+  --bg: #0D0D0D;
   --dark: #0D0D0D;
-  --dark-warm: #1A1A1A;
+  --dark-warm: #121212;
   --muted: #8A8A8A;
-  --green: #27AE60;
+  --green: #39FF14;
   
   --font-bebas: 'Bebas Neue', sans-serif;
   --font-sans: 'DM Sans', sans-serif;
@@ -35,23 +35,23 @@ body {
   height: 100%;
 }
 
-/* Presentation Deck Outer Container - Global Radial Dark-Red Gradient */
+/* Presentation Deck Outer Container - Global Radial Dark-Green Gradient */
 .presentation-container {
   width: 100vw;
   height: 100vh;
   position: relative;
   overflow: hidden;
-  background: radial-gradient(ellipse at 50% 70%, #2A0A0A 0%, #0D0D0D 65%);
+  background: radial-gradient(ellipse at 50% 70%, #0c2505 0%, #0D0D0D 70%);
   animation: breathe 8s infinite ease-in-out;
   cursor: pointer;
 }
 
 @keyframes breathe {
   0%, 100% {
-    background-image: radial-gradient(ellipse at 50% 70%, #2A0A0A 0%, #0D0D0D 65%);
+    background-image: radial-gradient(ellipse at 50% 70%, #0c2505 0%, #0D0D0D 70%);
   }
   50% {
-    background-image: radial-gradient(ellipse at 50% 70%, #3d0e0e 0%, #0D0D0D 65%);
+    background-image: radial-gradient(ellipse at 50% 70%, #123608 0%, #0D0D0D 70%);
   }
 }
 
@@ -297,29 +297,6 @@ body {
   }
 }
 
-/* ECG monitor path scrolling */
-.ecg-line {
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
-  animation: ecg-flow 6s infinite linear;
-}
-
-@keyframes ecg-flow {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-/* Dot Travel Along Line (Section 5) */
-@keyframes dot-travel {
-  0% {
-    left: 0%;
-  }
-  100% {
-    left: 100%;
-  }
-}
-
 /* Utility Animations */
 .fade-in {
   animation: fadeIn 1s forwards ease-out;
@@ -365,22 +342,6 @@ body {
   width: 100%;
 }
 
-/* Scanning Arc Pulsing loop */
-.scanning-arc-line {
-  animation: dash 2s linear infinite, arc-pulse 3s infinite ease-in-out;
-}
-
-@keyframes arc-pulse {
-  0%, 100% {
-    stroke: rgba(192, 57, 43, 0.4);
-    filter: drop-shadow(0 0 2px rgba(192, 57, 43, 0.4));
-  }
-  50% {
-    stroke: rgba(231, 76, 60, 1);
-    filter: drop-shadow(0 0 8px rgba(231, 76, 60, 0.8));
-  }
-}
-
 /* --- RESPONSIVE / AUTO-FIT SCALING RULES --- */
 @media (max-height: 850px) {
   .section {
@@ -390,10 +351,10 @@ body {
     gap: 0.8rem;
   }
   h1 {
-    font-size: 8rem !important;
+    font-size: 6.5rem !important;
   }
   h2 {
-    font-size: 3rem !important;
+    font-size: 2.5rem !important;
   }
 }
 
@@ -405,10 +366,10 @@ body {
     gap: 0.5rem;
   }
   h1 {
-    font-size: 6rem !important;
+    font-size: 5rem !important;
   }
   h2 {
-    font-size: 2.5rem !important;
+    font-size: 2rem !important;
   }
 }
 
